@@ -1,0 +1,15 @@
+11) Elektronický úkolovník
+
+Cílem semestrálního projektu bude vytvoøení elektronického deníku pro vkládání úkolù. Sytém bude umožòovat
+vkládání, editaci a mazání úkolù. Každý úkol bude mít možnost nastavení délky trvání.
+
+Základní parametry programu:
+		1. Po spuštìní programu budou uživateli zobrazeny úkoly pro aktuální den. Bude možná i navigace v jednotlivých úkolech (minulé/budoucí).
+		2. Úkoly bude možné oznaèit jako hotové èi jim nastavit prioritu, podle které jim bude pøiøazena barva.
+		3. Úkoly bude možné také kopírovat èi pøesouvat z jednoho data na druhé.
+		4. Navigace mezi jednotlivými úkoly bude možná skrze vložení data èi pomocí smìrových kláves.
+
+
+Bonusový úkol: 
+				Implementujte vykreslení jednotlivých událostí v kalendáøi, do konzolového okna. Bude
+				možné zobrazení v denním/týdenním režimu. 
