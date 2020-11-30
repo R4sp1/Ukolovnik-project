@@ -1,60 +1,39 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#pragma warning(disable : 4996)
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include <Windows.h>
 
-#include "Barvy.h"
 #include "UkolyDB.h"
 
-struct ukol* prvni = NULL; // globalni ukazatel na prvni auto
+int main() {
 
-void OnAdd()
-{
-	char my_name[UKOL_SIZE];
-	int my_year;
+	char command[16];
+	char input[16];
+	char cmd;
 
-	printf("\nUkol : ");         // dotazeme se na polozky
-	scanf_s("%s", my_name, UKOL_SIZE);
-	while (getchar() != '\n');
-	printf("\nRok : ");
-	scanf_s("%d", &my_year);
-	while (getchar() != '\n');
-	add(my_name, my_year, &prvni);         // volame pridavaci funkci
-}
+	SYSTEMTIME t; // Declare SYSTEMTIME struct
 
-void OnDel()
-{
-	int my_year;
+	GetLocalTime(&t); // Fill out the struct so that it can be used
 
-	printf("\nRok : ");
-	scanf_s("%d", &my_year);
-	while (getchar() != '\n');
-	del(my_year, &prvni);         // volame mazaci funkci
-}
+	// Use GetSystemTime(&t) to get UTC time 
 
-void ShowCars()
-{
-	struct ukol* aktUkol = prvni; // ukazatel na aktualni auto
-	printf("\n\n");
-	while (aktUkol) // prochazeni seznamu
-	{
-		printf("%d: %s\n", aktUkol->rok, aktUkol->nazev); // tisk radku
-		aktUkol = aktUkol->dalsi; // posun na dalsi auto
-	}
-	getchar();
-}
+	printf("%d.%d.%d, %d:%d:%d\n", t.wDay, t.wMonth, t.wYear, t.wHour, t.wMinute, t.wSecond); // Return year, month, day, hour, minute, second and millisecond in that order
 
+	Ukol* start = NULL;
 
-int main()
-{
-	char  cmd;
+	printf("A: Pridat     ");
+	printf("D: Smazat     ");
+	printf("P: Tisk     ");
+	printf("I: Vlozit     ");
+	printf("Q: Konec\n\n");
 
+	start = nacistSoubor(start);
 	do
 	{
-		system("cls");		// smaze obrazovku
-		printf(ZLUTE("A: Pridat     "));
-		printf(ZLUTE("D: Smazat     "));
-		printf(ZLUTE("P: Tisk     "));
-		printf(ZLUTE("Q: Konec\n\n"));
+		//system("cls");		// smaze obrazovku
+
+
 
 		cmd = tolower(getchar());
 		while (getchar() != '\n');
@@ -62,15 +41,31 @@ int main()
 		switch (cmd)
 		{
 		case 'a':
-			OnAdd();					// volame pridani
+			start = pridatNaKonec(start);
+			ZobrazitSeznam(start);					// volame pridani
 			break;
 		case 'd':
-			OnDel();					// volame mazani
+			start = smazatUkol(start);
+			ZobrazitSeznam(start);					// volame mazani
 			break;
 		case 'p':
-			ShowCars();
+			ZobrazitSeznam(start);
+			break;
+		case 'i':
+			if (start == NULL) {
+				start = pridatNaZacatek(start);
+			}
+			else {
+				start = Vlozeni(start);
+			}
+			ZobrazitSeznam(start);
 			break;
 		}
-	} while (cmd != 'q');     // koncime az pri Q
+	} while (cmd != 'q');
+	ZapsatDoSouboru(start);
+
+	VycisteniPameti(start);
+
 	return 0;
+
 }
