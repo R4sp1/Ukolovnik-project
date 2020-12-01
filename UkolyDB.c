@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <Windows.h>
 
 #include "UkolyDB.h"
 
@@ -28,7 +29,7 @@ void ZobrazitSeznam(Ukol* start) {
 
 Ukol* NovyUkol() {
 
-	printf("Vlozte den (1-31), mesic (1-12), rok (xxxx), jmeno ukolu, prioritu (1-5), hotovy ukol? (0=ne, 1=ano):\n");
+	printf("Vlozte den (1-31), mesic (1-12), rok (xxxx), jmeno ukolu, prioritu (1 (nejmensi) - 3 (nejvetsi)), hotovy ukol? (0=ne, 1=ano):\n");
 	char input[70];
 	fgets(input, 70, stdin);
 
@@ -159,6 +160,30 @@ Ukol* Vlozeni(Ukol* startPtr) {
 	return startPtr;
 }
 
+Ukol* oznacitUkolJakoHotovy(Ukol* startPtr) {
+
+	printf("Zadejte jmeno ukolu ktery chcete oznacit jako hotovy:");
+	char input[16];
+	fgets(input, 15, stdin);
+
+	Ukol* ukolRef = startPtr;
+	Ukol* ukolOznaceny = NULL;
+
+	while (ukolRef != NULL) {
+
+		if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) == 0) {
+			ukolOznaceny = ukolRef;
+			ukolOznaceny->hotovo = 1;
+			break;
+		}
+
+		ukolRef = ukolRef->dalsi;
+	}
+
+	return startPtr;
+
+}
+
 void VycisteniPameti(Ukol* start) {
 
 	Ukol* uvolneniPameti = start;
@@ -168,7 +193,7 @@ void VycisteniPameti(Ukol* start) {
 		free(uvolneniPameti);
 		uvolneniPameti = drzeniPameti;
 	}
-	printf("Uvolneni pameti");
+	//printf("Uvolneni pameti\n");
 }
 
 void ZapsatDoSouboru(Ukol* start) {
@@ -246,7 +271,7 @@ Ukol* nacistSoubor(Ukol* start) {
 		rewind(pSoubor);
 
 		int pocetUkolu = (int)(velikostSouboru / (sizeof(Ukol)));
-		printf("Pocet ukolu:%d\n", pocetUkolu);
+		//printf("Pocet ukolu:%d\n", pocetUkolu);
 
 		int loop = 0;
 		for (loop = 0; loop < pocetUkolu; ++loop) {
@@ -261,3 +286,104 @@ Ukol* nacistSoubor(Ukol* start) {
 	return start;
 
 }
+
+
+void dnesniUkol(Ukol* start) {
+	Ukol* aktualniUkol = start;
+	int pocet = 0;
+	SYSTEMTIME t; // Declare SYSTEMTIME struct
+	GetLocalTime(&t); // Fill out the struct so that it can be used
+
+	printf("Dnesni ukoly:\n");
+	while (aktualniUkol != NULL) {
+		if (aktualniUkol->rok == t.wYear) {
+			if (aktualniUkol->mesic == t.wMonth) {
+				if (aktualniUkol->den == t.wDay) {
+					pocet++;
+					printf("		Ukol: %-5d Jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+				}
+			}
+		}
+		aktualniUkol = aktualniUkol->dalsi;
+
+	}
+	if (pocet == 0) {
+		printf("		Zadny ukol\n");
+	}
+	else {
+		printf("		Pocet ukolu: %d\n", pocet);
+	}
+	printf("		Zobrazeni minulych ukolu - M, zobrazeni budoucich ukolu - B\n");
+}
+
+void budouciUkoly(Ukol* start) {
+	Ukol* aktualniUkol = start;
+	int pocet = 0;
+	SYSTEMTIME t; // Declare SYSTEMTIME struct
+	GetLocalTime(&t); // Fill out the struct so that it can be used
+
+	printf("Budouci ukoly:\n");
+	while (aktualniUkol != NULL) {
+		if (aktualniUkol->rok == t.wYear) {
+			if (aktualniUkol->mesic == t.wMonth) {
+				if (aktualniUkol->den > t.wDay) {
+					pocet++;
+					printf("		Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+				}
+			}
+			else if(aktualniUkol->mesic > t.wMonth){
+				pocet++;
+				printf("		Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+			}
+		}
+		else if (aktualniUkol->rok > t.wYear) {
+			pocet++;
+			printf("		Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
+		aktualniUkol = aktualniUkol->dalsi;
+
+	}
+	if (pocet == 0) {
+		printf("		Zadne budouci ukoly\n");
+	}
+	else {
+		printf("		Pocet budoucich ukolu: %d\n", pocet);
+	}
+}
+
+
+void minuleUkoly(Ukol* start) {
+	Ukol* aktualniUkol = start;
+	int pocet = 0;
+	SYSTEMTIME t; // Declare SYSTEMTIME struct
+	GetLocalTime(&t); // Fill out the struct so that it can be used
+
+	printf("Minule ukoly:\n");
+	while (aktualniUkol != NULL) {
+		if (aktualniUkol->rok == t.wYear) {
+			if (aktualniUkol->mesic == t.wMonth) {
+				if (aktualniUkol->den < t.wDay) {
+					pocet++;
+					printf("		Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+				}
+			}
+			else if (aktualniUkol->mesic < t.wMonth) {
+				pocet++;
+				printf("		Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+			}
+		}
+		else if (aktualniUkol->rok < t.wYear) {
+			pocet++;
+			printf("		Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
+		aktualniUkol = aktualniUkol->dalsi;
+
+	}
+	if (pocet == 0) {
+		printf("		Zadne minule ukoly\n");
+	}
+	else {
+		printf("		Pocet minulych ukolu: %d\n", pocet);
+	}
+}
+

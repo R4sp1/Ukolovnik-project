@@ -18,3 +18,6 @@ typedef struct S_Ukol {
 void ZobrazitSeznam(Ukol* start);
 void VycisteniPameti(Ukol* start);
 void ZapsatDoSouboru(Ukol* start);
+void dnesniUkol(Ukol* start);
+void budouciUkoly(Ukol* start);
+void minuleUkoly(Ukol* start);

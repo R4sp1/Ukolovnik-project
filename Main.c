@@ -18,17 +18,19 @@ int main() {
 
 	// Use GetSystemTime(&t) to get UTC time 
 
-	printf("%d.%d.%d, %d:%d:%d\n", t.wDay, t.wMonth, t.wYear, t.wHour, t.wMinute, t.wSecond); // Return year, month, day, hour, minute, second and millisecond in that order
+	printf("%d.%d.%d, %d:%d:%d\n\n", t.wDay, t.wMonth, t.wYear, t.wHour, t.wMinute, t.wSecond); // Return year, month, day, hour, minute, second and millisecond in that order
 
 	Ukol* start = NULL;
 
-	printf("A: Pridat     ");
-	printf("D: Smazat     ");
-	printf("P: Tisk     ");
-	printf("I: Vlozit     ");
+	printf("A: Pridat ukol     ");
+	printf("D: Smazat ukol     ");
+	printf("P: Tisk celeho seznamu    ");
+	printf("H: Oznacit ukol jako hotovy     ");
+	printf("I: Vlozit ukol     ");
 	printf("Q: Konec\n\n");
 
 	start = nacistSoubor(start);
+	dnesniUkol(start);
 	do
 	{
 		//system("cls");		// smaze obrazovku
@@ -41,15 +43,22 @@ int main() {
 		switch (cmd)
 		{
 		case 'a':
-			start = pridatNaKonec(start);
-			ZobrazitSeznam(start);					// volame pridani
+			start = pridatNaKonec(start);				// volame pridani
 			break;
 		case 'd':
-			start = smazatUkol(start);
-			ZobrazitSeznam(start);					// volame mazani
+			start = smazatUkol(start);					// volame mazani
 			break;
 		case 'p':
 			ZobrazitSeznam(start);
+			break;
+		case 'h':
+			start = oznacitUkolJakoHotovy(start);
+			break;
+		case 'm':
+			minuleUkoly(start);
+			break;
+		case 'b':
+			budouciUkoly(start);
 			break;
 		case 'i':
 			if (start == NULL) {
