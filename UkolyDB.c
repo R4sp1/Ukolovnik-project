@@ -18,7 +18,7 @@ void ZobrazitSeznam(Ukol* start) {
 		vepredu = aktualniUkol->dalsi;
 		vzadu = aktualniUkol->predchozi;
 
-		printf("Ukol:%d datum:%d.%d.%d jmeno:%s priorita:%d hotovo:%d vepredu:%s vzadu:%s\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo, (vepredu == NULL) ? "Zadny" : vepredu->jmeno, (vzadu == NULL) ? "Zadny" : vzadu->jmeno);
+		printf("Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
 		aktualniUkol = aktualniUkol->dalsi;
 		vepredu = NULL;
 		vzadu = NULL;
