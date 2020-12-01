@@ -165,10 +165,10 @@ void VycisteniPameti(Ukol* start) {
 	Ukol* drzeniPameti = NULL;
 	while (uvolneniPameti != NULL) {
 		drzeniPameti = uvolneniPameti->dalsi;
-		printf("Uvolneni pameti");
 		free(uvolneniPameti);
 		uvolneniPameti = drzeniPameti;
 	}
+	printf("Uvolneni pameti");
 }
 
 void ZapsatDoSouboru(Ukol* start) {
