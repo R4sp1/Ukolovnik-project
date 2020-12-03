@@ -138,7 +138,7 @@ Ukol* Vlozeni(Ukol* startPtr) {
 	else {
 		while (poUkolu->dalsi != NULL) {
 			poUkolu = poUkolu->dalsi;
-			if (strncmp(input, poUkolu->dalsi, strlen(poUkolu->dalsi)) == 0) {
+			if (strncmp(input, poUkolu->jmeno, strlen(poUkolu->jmeno)) == 0) {
 				novyUkol = NovyUkol();
 				break;
 			}
