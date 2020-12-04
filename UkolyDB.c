@@ -55,7 +55,7 @@ void ZobrazitSeznam(Ukol* start) {
 		vepredu = NULL;
 		vzadu = NULL;
 	}
-	printf("		Ukolu celkem: %d\n", pocet);
+	printf("		Ukolu celkem: %d\n\n", pocet);
 }
 
 Ukol* NovyUkol() {
