@@ -21,3 +21,4 @@ void ZapsatDoSouboru(Ukol* start);
 void dnesniUkol(Ukol* start);
 void budouciUkoly(Ukol* start);
 void minuleUkoly(Ukol* start);
+void zmenitUkol(Ukol* strat);

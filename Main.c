@@ -22,11 +22,11 @@ int main() {
 
 	Ukol* start = NULL;
 
-	printf("A: Pridat ukol     ");
-	printf("D: Smazat ukol     ");
-	printf("P: Tisk celeho seznamu    ");
-	printf("H: Oznacit ukol jako hotovy     ");
-	printf("I: Vlozit ukol     ");
+	printf("A: Pridat ukol\n");
+	printf("D: Smazat ukol\n");
+	printf("P: Tisk celeho seznamu\n");
+	printf("C: Upravit ukol\n");
+	printf("I: Kopirovat ukol\n");
 	printf("Q: Konec\n\n");
 
 	start = nacistSoubor(start);
@@ -51,9 +51,6 @@ int main() {
 		case 'p':
 			ZobrazitSeznam(start);
 			break;
-		case 'h':
-			start = oznacitUkolJakoHotovy(start);
-			break;
 		case 'm':
 			minuleUkoly(start);
 			break;
@@ -61,13 +58,17 @@ int main() {
 			budouciUkoly(start);
 			break;
 		case 'i':
-			if (start == NULL) {
+			start = kopirovatUkol(start);
+			break;
+		case 'c':
+			zmenitUkol(start);
+			/*if (start == NULL) {
 				start = pridatNaZacatek(start);
 			}
 			else {
 				start = Vlozeni(start);
 			}
-			ZobrazitSeznam(start);
+			ZobrazitSeznam(start);*/
 			break;
 		}
 	} while (cmd != 'q');

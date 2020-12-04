@@ -43,6 +43,7 @@ Ukol* NovyUkol() {
 	return novyUkol;
 }
 
+
 Ukol* pridatNaZacatek(Ukol* startPtr) {
 	Ukol* novyUkol = NovyUkol();
 	if (startPtr != NULL) {
@@ -77,7 +78,7 @@ Ukol* pridatNaKonec(Ukol* startPtr) {
 
 Ukol* smazatUkol(Ukol* startPtr) {
 
-	printf("Zadejte jmeno ukolu ktery chcete smazat:");
+	printf("Zadejte jmeno ukolu ktery chcete smazat: ");
 	char input[16];
 	fgets(input, 15, stdin);
 
@@ -160,9 +161,102 @@ Ukol* Vlozeni(Ukol* startPtr) {
 	return startPtr;
 }
 
+Ukol* presunoutUkol(Ukol* startPtr) {
+	printf("Zadejte jmeno ukolu ktery chcete presunout na jine datum: ");
+	char input[16];
+	fgets(input, 15, stdin);
+
+	Ukol* ukolRef = startPtr;
+	Ukol* ukolOznaceny = NULL;
+
+	while (ukolRef != NULL) {
+
+		if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) == 0) {
+			ukolOznaceny = ukolRef;
+			int new_den, new_mesic, new_rok;
+			
+			printf("Zadejte nove datum (den (1-31) mesic (1-12) rok (xxxx))\n");
+			char dat[30];
+			fgets(dat, 30, stdin);
+
+
+			sscanf(dat, "%d %d %d", &new_den, &new_mesic, &new_rok);
+
+
+			ukolOznaceny->den = new_den;
+			ukolOznaceny->mesic = new_mesic;
+			ukolOznaceny->rok = new_rok;
+
+			printf("Nove datum ukolu: %s je: %d.%d.%d\n", ukolOznaceny->jmeno, ukolOznaceny->den, ukolOznaceny->mesic, ukolOznaceny->rok);
+			//free(ukolOznaceny);
+			break;
+		}
+		ukolRef = ukolRef->dalsi;
+	}
+	return startPtr;
+}
+
+Ukol* kopirovatUkol(Ukol* startPtr) {
+	printf("Zadejte jmeno ukolu ktery chcete kopirovat na jine datum: ");
+	char input[16];
+	fgets(input, 15, stdin);
+
+	Ukol* ukolRef = startPtr;
+	Ukol* ukolOznaceny = NULL;
+
+	while (ukolRef != NULL) {
+
+		if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) == 0) {
+			ukolOznaceny = ukolRef;
+			int new_den, new_mesic, new_rok;
+			char src[50], dest[50];
+
+			Ukol* indexUkolu = startPtr;
+			while (indexUkolu->dalsi != NULL) {
+				indexUkolu = indexUkolu->dalsi;
+			}
+			//Ukol* novyUkol = NULL;
+			Ukol* novyUkol = malloc(sizeof(Ukol));
+
+			strcpy(src, ukolOznaceny->jmeno);
+			strcpy(dest, "_kopie");
+
+			printf("Zadejte nove datum (den (1-31) mesic (1-12) rok (xxxx))\n");
+			char dat[30];
+			fgets(dat, 30, stdin);
+			sscanf(dat, "%d %d %d", &new_den, &new_mesic, &new_rok);
+
+			novyUkol->den = new_den;
+			novyUkol->mesic = new_mesic;
+			novyUkol->rok = new_rok;
+
+			strncat(src, dest, 30);
+			strcpy(novyUkol->jmeno, src);
+
+			novyUkol->priorita = ukolOznaceny->priorita;
+			novyUkol->hotovo = ukolOznaceny->hotovo;
+
+			novyUkol->dalsi = NULL;
+			novyUkol->predchozi = NULL;
+
+
+			indexUkolu->dalsi = novyUkol;
+			novyUkol->dalsi = NULL;
+			novyUkol->predchozi = indexUkolu;
+
+
+			printf("Kopie ukolu: %s byla vytvorena s datumem: %d.%d.%d\n", ukolOznaceny->jmeno, novyUkol->den, novyUkol->mesic, novyUkol->rok);
+			//free(ukolOznaceny);
+			break;
+		}
+		ukolRef = ukolRef->dalsi;
+	}
+	return startPtr;
+}
+
 Ukol* oznacitUkolJakoHotovy(Ukol* startPtr) {
 
-	printf("Zadejte jmeno ukolu ktery chcete oznacit jako hotovy:");
+	printf("Zadejte jmeno ukolu ktery chcete oznacit jako hotovy: ");
 	char input[16];
 	fgets(input, 15, stdin);
 
@@ -387,3 +481,86 @@ void minuleUkoly(Ukol* start) {
 	}
 }
 
+void zmenitUkol(Ukol* start) {
+	printf("	Zadejte jmeno ukolu ktery chcete zmenit: ");
+	char input[16];
+	fgets(input, 15, stdin);
+
+	Ukol* ukolRef = start;
+	Ukol* ukolOznaceny = NULL;
+	if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) != 0) {
+		printf("	Ukol nebyl nalezen - zadali jste spatne jmeno ukolu\n");
+	}
+	while (ukolRef != NULL) {
+		if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) == 0) {
+			ukolOznaceny = ukolRef;
+			printf("	Vybrali jste ukol: %s\n\n", ukolOznaceny->jmeno);
+			printf("	H: Oznacit ukol jako hotovy\n");
+			printf("	P: Zmenit prioritu ukolu\n");
+			printf("	D: Presunout ukol na jine datum\n");
+			printf("	Q: Odejit z uprav ukolu\n\n");
+			char cmd;
+			char zmena;
+			char input[30];
+			int new_den, new_mesic, new_rok, new_priorita;
+			do
+			{
+				//system("cls");		// smaze obrazovku
+
+
+
+				cmd = tolower(getchar());
+				while (getchar() != '\n');
+
+				switch (cmd)
+				{
+				case 'h':
+					if (ukolOznaceny->hotovo == 1) {
+						printf("	Ukol je jiz oznacen jako hotovy. Prejete si ho oznacit jako nehotovy? (A/N) ");
+						do {
+							zmena = tolower(getchar());
+							while (getchar() != '\n');
+							switch (zmena) {
+								case 'a':
+									printf("	Ukol %s oznaceny jako nehotovy\n", ukolOznaceny->jmeno);
+									ukolOznaceny->hotovo = 0;
+									break;
+								case 'n':
+									break;
+							}
+							break;
+						} while (1);
+					}
+					else {
+						ukolOznaceny->hotovo = 1;
+					}
+					break;
+				case 'p':
+					printf("	Aktulani priorita ukolu je: %d\n", ukolOznaceny->priorita);
+					printf("	Zadejte novou prioritu ukolu (1 (nejmensi) - 3 (nejvetsi))\n");
+					fgets(input, 30, stdin);
+					sscanf(input, "%d", &new_priorita);
+
+					ukolOznaceny->priorita = new_priorita;
+
+					printf("	Nova priorita ukolu: %s je: %d\n", ukolOznaceny->jmeno, ukolOznaceny->priorita);
+					break;
+				case 'd':
+					printf("	Zadejte nove datum (den (1-31) mesic (1-12) rok (xxxx))\n");
+					fgets(input, 30, stdin);
+
+					sscanf(input, "%d %d %d", &new_den, &new_mesic, &new_rok);
+
+					ukolOznaceny->den = new_den;
+					ukolOznaceny->mesic = new_mesic;
+					ukolOznaceny->rok = new_rok;
+
+					printf("	Nove datum ukolu: %s je: %d.%d.%d\n", ukolOznaceny->jmeno, ukolOznaceny->den, ukolOznaceny->mesic, ukolOznaceny->rok);
+					break;
+				}
+			} while (cmd != 'q');
+			break;
+		}
+		ukolRef = ukolRef->dalsi;
+	}
+}
