@@ -5,13 +5,17 @@
 #include <Windows.h>
 
 #include "UkolyDB.h"
+#include "Barvy.h"
 
 void ZobrazitSeznam(Ukol* start) {
 	Ukol* aktualniUkol = start;
 	int pocet = 0;
+	SYSTEMTIME t; // Declare SYSTEMTIME struct
+	GetLocalTime(&t); // Fill out the struct so that it can be used
 
 	Ukol* vepredu = NULL;
 	Ukol* vzadu = NULL;
+	printf("Vase ukoly:\n");
 
 	while (aktualniUkol != NULL) {
 		pocet++;
@@ -19,19 +23,46 @@ void ZobrazitSeznam(Ukol* start) {
 		vepredu = aktualniUkol->dalsi;
 		vzadu = aktualniUkol->predchozi;
 
-		printf("Ukol: %-5d datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", pocet, aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		if (aktualniUkol->hotovo == 1) {
+			printf(CERNE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
+		else if ((aktualniUkol->rok == t.wYear) && (aktualniUkol->hotovo == 0)){
+			if ((aktualniUkol->mesic == t.wMonth) && (aktualniUkol->hotovo == 0)) {
+				if ((aktualniUkol->den < t.wDay) && (aktualniUkol->hotovo == 0)) {
+					printf(CERVENE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+				}
+			}
+			else if ((aktualniUkol->mesic < t.wMonth) && (aktualniUkol->hotovo == 0)) {
+				printf(CERVENE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+			}
+			else if ((aktualniUkol->rok < t.wYear) && (aktualniUkol->hotovo == 0)) {
+				printf(CERVENE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+			}
+		}
+		if (aktualniUkol->priorita == 1) {
+			printf(ZELENE("Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
+		else if (aktualniUkol->priorita == 2) {
+			printf(ZLUTE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
+		else if (aktualniUkol->priorita == 3) {
+			printf(MODRE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
+		else {
+			printf("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		}
 		aktualniUkol = aktualniUkol->dalsi;
 		vepredu = NULL;
 		vzadu = NULL;
 	}
-	printf("Pocet ukolu:%d\n", pocet);
+	printf("		Ukolu celkem: %d\n", pocet);
 }
 
 Ukol* NovyUkol() {
 
 	printf("Vlozte den (1-31), mesic (1-12), rok (xxxx), jmeno ukolu, prioritu (1 (nejmensi) - 3 (nejvetsi)), hotovy ukol? (0=ne, 1=ano):\n");
-	char input[70];
-	fgets(input, 70, stdin);
+	char input[100];
+	fgets(input, 99, stdin);
 
 	Ukol* novyUkol = malloc(sizeof(Ukol));
 	sscanf(input, "%d %d %d %s %d %d", &novyUkol->den, &novyUkol->mesic, &novyUkol->rok, &novyUkol->jmeno, &novyUkol->priorita, &novyUkol->hotovo);
@@ -79,8 +110,8 @@ Ukol* pridatNaKonec(Ukol* startPtr) {
 Ukol* smazatUkol(Ukol* startPtr) {
 
 	printf("Zadejte jmeno ukolu ktery chcete smazat: ");
-	char input[16];
-	fgets(input, 15, stdin);
+	char input[30];
+	fgets(input, 29, stdin);
 
 	Ukol* ukolRef = startPtr;
 	Ukol* ukolSmazani = NULL;
@@ -127,8 +158,8 @@ Ukol* smazatUkol(Ukol* startPtr) {
 
 Ukol* Vlozeni(Ukol* startPtr) {
 	printf("Vloz ukol po ukolu:");
-	char input[16];
-	fgets(input, 15, stdin);
+	char input[30];
+	fgets(input, 29, stdin);
 
 	Ukol* poUkolu = startPtr;
 	Ukol* novyUkol = NULL;
@@ -163,8 +194,8 @@ Ukol* Vlozeni(Ukol* startPtr) {
 
 Ukol* presunoutUkol(Ukol* startPtr) {
 	printf("Zadejte jmeno ukolu ktery chcete presunout na jine datum: ");
-	char input[16];
-	fgets(input, 15, stdin);
+	char input[30];
+	fgets(input, 29, stdin);
 
 	Ukol* ukolRef = startPtr;
 	Ukol* ukolOznaceny = NULL;
@@ -198,8 +229,8 @@ Ukol* presunoutUkol(Ukol* startPtr) {
 
 Ukol* kopirovatUkol(Ukol* startPtr) {
 	printf("Zadejte jmeno ukolu ktery chcete kopirovat na jine datum: ");
-	char input[16];
-	fgets(input, 15, stdin);
+	char input[30];
+	fgets(input, 29, stdin);
 
 	Ukol* ukolRef = startPtr;
 	Ukol* ukolOznaceny = NULL;
@@ -257,8 +288,8 @@ Ukol* kopirovatUkol(Ukol* startPtr) {
 Ukol* oznacitUkolJakoHotovy(Ukol* startPtr) {
 
 	printf("Zadejte jmeno ukolu ktery chcete oznacit jako hotovy: ");
-	char input[16];
-	fgets(input, 15, stdin);
+	char input[30];
+	fgets(input, 29, stdin);
 
 	Ukol* ukolRef = startPtr;
 	Ukol* ukolOznaceny = NULL;
@@ -326,7 +357,6 @@ void ZapsatDoSouboru(Ukol* start) {
 	else {
 		printf("Chyba pøi otevírání souboru\n");
 	}
-
 }
 
 Ukol* CteniDalsihoUkolu(Ukol* start, FILE* pSoubor) {
@@ -482,15 +512,15 @@ void minuleUkoly(Ukol* start) {
 }
 
 void zmenitUkol(Ukol* start) {
-	printf("	Zadejte jmeno ukolu ktery chcete zmenit: ");
-	char input[16];
-	fgets(input, 15, stdin);
+	printf("Zadejte jmeno ukolu ktery chcete zmenit: ");
+	char input[30];
+	fgets(input, 29, stdin);
 
 	Ukol* ukolRef = start;
 	Ukol* ukolOznaceny = NULL;
-	if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) != 0) {
-		printf("	Ukol nebyl nalezen - zadali jste spatne jmeno ukolu\n");
-	}
+	/*if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) != 0) {
+		printf("ERROR: Ukol nebyl nalezen - zadali jste spatne jmeno ukolu\n");
+	}*/
 	while (ukolRef != NULL) {
 		if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) == 0) {
 			ukolOznaceny = ukolRef;

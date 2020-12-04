@@ -149,9 +149,6 @@
     <ClCompile Include="Main.c" />
     <ClCompile Include="UkolyDB.c" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ukoly.bin" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

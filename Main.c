@@ -5,6 +5,7 @@
 #include <Windows.h>
 
 #include "UkolyDB.h"
+#include "Barvy.h"
 
 int main() {
 
@@ -12,14 +13,14 @@ int main() {
 	char input[16];
 	char cmd;
 
-	SYSTEMTIME t; // Declare SYSTEMTIME struct
+	/*SYSTEMTIME t; // Declare SYSTEMTIME struct
 
 	GetLocalTime(&t); // Fill out the struct so that it can be used
 
 	// Use GetSystemTime(&t) to get UTC time 
 
 	printf("%d.%d.%d, %d:%d:%d\n\n", t.wDay, t.wMonth, t.wYear, t.wHour, t.wMinute, t.wSecond); // Return year, month, day, hour, minute, second and millisecond in that order
-
+	*/
 	Ukol* start = NULL;
 
 	printf("A: Pridat ukol\n");
@@ -72,10 +73,16 @@ int main() {
 			break;
 		}
 	} while (cmd != 'q');
-	ZapsatDoSouboru(start);
 
-	VycisteniPameti(start);
+	while (1) {
+		ZapsatDoSouboru(start);
+
+		VycisteniPameti(start);
+		break;
+	}
+
 
 	return 0;
+
 
 }
