@@ -39,8 +39,8 @@ void ZobrazitSeznam(Ukol* start) {
 				printf(CERVENE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
 			}
 		}
-		if (aktualniUkol->priorita == 1) {
-			printf(ZELENE("Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
+		else if (aktualniUkol->priorita == 1) {
+			printf(ZELENE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
 		}
 		else if (aktualniUkol->priorita == 2) {
 			printf(ZLUTE("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n"), aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
@@ -51,6 +51,7 @@ void ZobrazitSeznam(Ukol* start) {
 		else {
 			printf("		Datum: %d.%d.%-5d\t jmeno: %-12s\t priorita: %-1d\t hotovo: %-1d\n", aktualniUkol->den, aktualniUkol->mesic, aktualniUkol->rok, aktualniUkol->jmeno, aktualniUkol->priorita, aktualniUkol->hotovo);
 		}
+
 		aktualniUkol = aktualniUkol->dalsi;
 		vepredu = NULL;
 		vzadu = NULL;

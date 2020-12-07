@@ -12,4 +12,4 @@ Základní parametry programu:
 
 Bonusový úkol: 
 				Implementujte vykreslení jednotlivých událostí v kalendáøi, do konzolového okna. Bude
-				možné zobrazení v denním/týdenním režimu. 
+				možné zobrazení v denním/týdenním režimu.
