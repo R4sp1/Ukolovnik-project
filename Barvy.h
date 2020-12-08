@@ -1,6 +1,6 @@
 #pragma once
 //definovani ANSI barev
-
+//barvy nefunguji v zakladnim win cmd... 
 
 #define CERNE(x) "\033[30;1m" x "\033[0m"
 #define CERVENE(x) "\033[31;1m" x "\033[0m"
