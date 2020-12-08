@@ -1,33 +1,33 @@
-#pragma warning(disable : 4996)
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <Windows.h>
 
 #include "UkolyDB.h"
 #include "Barvy.h"
 
 int main() {
-	system("cls");
+	system("cls"); //smazani obrazovky
 	char command[16];
 	char input[16];
 	char cmd;
 
-	/*SYSTEMTIME t; // Declare SYSTEMTIME struct
-	GetLocalTime(&t); // Fill out the struct so that it can be used
-	printf("%d.%d.%d, %d:%d:%d\n\n", t.wDay, t.wMonth, t.wYear, t.wHour, t.wMinute, t.wSecond); // Return year, month, day, hour, minute, second and millisecond in that order
+	/*SYSTEMTIME t; // struktura systemoveho casu
+	GetLocalTime(&t); // naplneni struktury
+	printf("%d.%d.%d, %d:%d:%d\n\n", t.wDay, t.wMonth, t.wYear, t.wHour, t.wMinute, t.wSecond); // rok, mesic, den, hodina, minuta, sekunda
 	*/
 
-	Ukol* start = NULL;
+	Ukol* start = NULL; //start zacina na 0
 
+	//zakladni menu
 	printf("A: Pridat ukol\n");
 	printf("P: Tisk celeho seznamu\n");
 	printf("C: Upravit nebo smazat ukol\n");
 	printf("I: Kopirovat ukol na jine datum\n");
 	printf("Q: Konec\n\n");
 
-	start = nacistSoubor(start);
-	dnesniUkol(start);
+	start = nacistSoubor(start); //volani funkce ktera nacte ukoly ze souboru ukoly.bin do pameti
+	dnesniUkol(start); //volani funkce ktera porovna systemove datum a zobrazi ukoly s timto datem
 	do
 	{
 		cmd = tolower(getchar());
@@ -39,24 +39,24 @@ int main() {
 			start = pridatNaKonec(start);				// volame pridani
 			break;
 		case 'p':
-			ZobrazitSeznam(start);
+			ZobrazitSeznam(start); //zobrazeni vsech ukolu
 			break;
 		case 'm':
-			minuleUkoly(start);
+			minuleUkoly(start); //zobrazeni ukolu ktere jiz probehly
 			break;
 		case 'b':
-			budouciUkoly(start);
+			budouciUkoly(start); //zobrazeni pouze budoucich ukolu
 			break;
 		case 'i':
-			start = kopirovatUkol(start);
+			start = kopirovatUkol(start); //kopirovani ukolu na jine datum
 			break;
 		case 'c':
-			zmenitUkol(start);
+			zmenitUkol(start); //volame menu s upravami ukolu
 			break;
 		}
 	} while (cmd != 'q');
 
-	ZapsatDoSouboru(start);
+	ZapsatDoSouboru(start); //po ukonceni zapsani do souboru a vycisteni pameti
 	VycisteniPameti(start);
 
 	return 0;
