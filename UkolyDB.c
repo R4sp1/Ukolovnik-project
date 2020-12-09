@@ -200,7 +200,7 @@ Ukol* presunoutUkol(Ukol* startPtr) { //presunuti ukolu na jine datum. Funkci ve
 
 			printf("Zadejte nove datum (den (1-31) mesic (1-12) rok (xxxx))\n");
 			char dat[30];
-			fgets(dat, 30, stdin);
+			fgets(dat, 29, stdin);
 
 
 			sscanf(dat, "%d %d %d", &new_den, &new_mesic, &new_rok);
@@ -232,7 +232,7 @@ Ukol* kopirovatUkol(Ukol* startPtr) { //kopirovani ukolu na jine datum, vytvori 
 		if (strncmp(input, ukolRef->jmeno, strlen(ukolRef->jmeno)) == 0) {
 			ukolOznaceny = ukolRef;
 			int new_den, new_mesic, new_rok;
-			char src[50], dest[50];
+			char src[UKOL_SIZE], dest[UKOL_SIZE];
 
 			Ukol* indexUkolu = startPtr;
 			while (indexUkolu->dalsi != NULL) {
@@ -246,14 +246,14 @@ Ukol* kopirovatUkol(Ukol* startPtr) { //kopirovani ukolu na jine datum, vytvori 
 
 			printf("Zadejte nove datum (den (1-31) mesic (1-12) rok (xxxx))\n");
 			char dat[30];
-			fgets(dat, 30, stdin);
+			fgets(dat, 29, stdin);
 			sscanf(dat, "%d %d %d", &new_den, &new_mesic, &new_rok);
 
 			novyUkol->den = new_den;
 			novyUkol->mesic = new_mesic;
 			novyUkol->rok = new_rok;
 
-			strncat(src, dest, 30);
+			strncat(src, dest, UKOL_SIZE);
 			strcpy(novyUkol->jmeno, src);
 
 			novyUkol->priorita = ukolOznaceny->priorita;
@@ -448,8 +448,8 @@ void dnesniUkol(Ukol* start) {
 void budouciUkoly(Ukol* start) {
 	Ukol* aktualniUkol = start;
 	int pocet = 0;
-	SYSTEMTIME t; // Declare SYSTEMTIME struct
-	GetLocalTime(&t); // Fill out the struct so that it can be used
+	SYSTEMTIME t;
+	GetLocalTime(&t);
 
 	printf("Budouci ukoly:\n");
 	while (aktualniUkol != NULL) {
@@ -525,8 +525,8 @@ void budouciUkoly(Ukol* start) {
 void minuleUkoly(Ukol* start) {
 	Ukol* aktualniUkol = start;
 	int pocet = 0;
-	SYSTEMTIME t; // Declare SYSTEMTIME struct
-	GetLocalTime(&t); // Fill out the struct so that it can be used
+	SYSTEMTIME t;
+	GetLocalTime(&t);
 
 	printf("Minule ukoly:\n");
 	while (aktualniUkol != NULL) {
@@ -660,7 +660,7 @@ void zmenitUkol(Ukol* start) {
 					case 'p': //zmena priority ukolu
 						printf("	Aktulani priorita ukolu je: %d\n", ukolOznaceny->priorita);
 						printf("	Zadejte novou prioritu ukolu (1 (nejmensi) - 3 (nejvetsi))\n");
-						fgets(input, 30, stdin);
+						fgets(input, 29, stdin);
 						sscanf(input, "%d", &new_priorita);
 
 						ukolOznaceny->priorita = new_priorita;
